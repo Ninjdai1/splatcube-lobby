@@ -29,13 +29,13 @@ public class Main {
         MinecraftServer.getBlockManager().registerHandler(SignHandler.KEY, SignHandler::new);
 
         // Load Lobbies
-        inkopolisPlaza = instanceManager.createInstanceContainer();
+        /*inkopolisPlaza = instanceManager.createInstanceContainer();
         inkopolisPlaza.setChunkLoader(new AnvilLoader("worlds/inkopolis_plaza"));
         inkopolisPlaza.setChunkSupplier(LightingChunk::new);
 
         inkopolisSquare = instanceManager.createInstanceContainer();
         inkopolisSquare.setChunkLoader(new AnvilLoader("worlds/inkopolis_square"));
-        inkopolisSquare.setChunkSupplier(LightingChunk::new);
+        inkopolisSquare.setChunkSupplier(LightingChunk::new);*/
 
         splatville = instanceManager.createInstanceContainer();
         splatville.setChunkLoader(new AnvilLoader("worlds/splatville"));
@@ -50,6 +50,7 @@ public class Main {
         // Event Handlers
         GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
         globalEventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
+            System.out.printf("%s is connecting...%n", event.getPlayer().getUsername());
             event.setSpawningInstance(splatville);
             event.getPlayer().setRespawnPoint(new Pos(-9.5, 9, -1.5));
         });
@@ -57,15 +58,15 @@ public class Main {
             event.getPlayer().setGameMode(GameMode.ADVENTURE);
             event.getPlayer().setAllowFlying(true);
 
-            if (event.getInstance() == splatville) {
+            /*if (event.getInstance() == splatville) {
                 event.getPlayer().lookAt(new Pos(-10, 24, 37));
             } else if (event.getInstance() == inkopolisSquare)
                 event.getPlayer().lookAt(new Pos(-222, 9, -782));
             else if (event.getInstance() == inkopolisPlaza) {
                 event.getPlayer().lookAt(new Pos(76, 12, -698));
-            }
+            }*/
         });
-        globalEventHandler.addListener(PlayerChatEvent.class, event -> {
+        /*globalEventHandler.addListener(PlayerChatEvent.class, event -> {
             if (event.getInstance() == splatville) {
                 event.getPlayer().setInstance(inkopolisPlaza, new Pos(76.5, 10, -659.5));
             } else if (event.getInstance() == inkopolisPlaza) {
@@ -73,7 +74,7 @@ public class Main {
             } else {
                 event.getPlayer().setInstance(splatville, new Pos(-9.5, 9, -1.5));
             }
-        });
+        });*/
 
         minecraftServer.start("0.0.0.0", 25565);
     }
