@@ -7,7 +7,7 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
-import net.minestom.server.event.player.PlayerChatEvent;
+import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.extras.velocity.VelocityProxy;
 import net.minestom.server.instance.InstanceContainer;
@@ -29,13 +29,14 @@ public class Main {
         MinecraftServer.getBlockManager().registerHandler(SignHandler.KEY, SignHandler::new);
 
         // Load Lobbies
-        /*inkopolisPlaza = instanceManager.createInstanceContainer();
+        inkopolisPlaza = instanceManager.createInstanceContainer();
         inkopolisPlaza.setChunkLoader(new AnvilLoader("worlds/inkopolis_plaza"));
         inkopolisPlaza.setChunkSupplier(LightingChunk::new);
+        //SchemEntity inkopolisPlazaTrain = new SchemEntity(new File("worlds/schematics/inkopolis_train_front.schem"), 40, inkopolisPlaza, TrainPos.posList.getFirst().withYaw((yaw)->yaw-90));
 
         inkopolisSquare = instanceManager.createInstanceContainer();
         inkopolisSquare.setChunkLoader(new AnvilLoader("worlds/inkopolis_square"));
-        inkopolisSquare.setChunkSupplier(LightingChunk::new);*/
+        inkopolisSquare.setChunkSupplier(LightingChunk::new);
 
         splatville = instanceManager.createInstanceContainer();
         splatville.setChunkLoader(new AnvilLoader("worlds/splatville"));
@@ -50,31 +51,35 @@ public class Main {
         // Event Handlers
         GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
         globalEventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
-            System.out.printf("%s is connecting...%n", event.getPlayer().getUsername());
             event.setSpawningInstance(splatville);
             event.getPlayer().setRespawnPoint(new Pos(-9.5, 9, -1.5));
         });
+
         globalEventHandler.addListener(PlayerSpawnEvent.class, event -> {
             event.getPlayer().setGameMode(GameMode.ADVENTURE);
             event.getPlayer().setAllowFlying(true);
+            event.getPlayer().stopSpectating();
+            event.getPlayer().setInvisible(false);
 
-            /*if (event.getInstance() == splatville) {
+            if (event.getInstance() == splatville) {
                 event.getPlayer().lookAt(new Pos(-10, 24, 37));
             } else if (event.getInstance() == inkopolisSquare)
                 event.getPlayer().lookAt(new Pos(-222, 9, -782));
             else if (event.getInstance() == inkopolisPlaza) {
                 event.getPlayer().lookAt(new Pos(76, 12, -698));
-            }*/
-        });
-        /*globalEventHandler.addListener(PlayerChatEvent.class, event -> {
-            if (event.getInstance() == splatville) {
-                event.getPlayer().setInstance(inkopolisPlaza, new Pos(76.5, 10, -659.5));
-            } else if (event.getInstance() == inkopolisPlaza) {
-                event.getPlayer().setInstance(inkopolisSquare, new Pos(-221.5, 8, -743.5));
-            } else {
-                event.getPlayer().setInstance(splatville, new Pos(-9.5, 9, -1.5));
             }
-        });*/
+        });
+
+        globalEventHandler.addListener(PlayerMoveEvent.class, event -> {
+            for (CallbackLocations location: CallbackLocations.values()) {
+                if (location.playerInArea(event.getPlayer())) {
+                    location.enterCallback.accept(event.getPlayer());
+                }
+                else if (location.posInArea(event.getPlayer().getInstance(), event.getPlayer().getPreviousPosition())) {
+                    location.leaveCallback.accept(event.getPlayer());
+                }
+            }
+        });
 
         minecraftServer.start("0.0.0.0", 25565);
     }
