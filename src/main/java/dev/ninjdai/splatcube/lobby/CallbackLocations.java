@@ -27,17 +27,14 @@ public enum CallbackLocations {
             (player) -> {
                 if (!player.hasTag(Tags.hubTag) || !player.getTag(Tags.hubTag)) {
                     player.setTag(Tags.hubTag, true);
-                    player.sendMessage("Joining queue...");
-                    //MinecraftServer.getCommandManager().execute(player, "queue join Splatcube4v4");
-
                     String message = "queue:" + player.getUsername() + ":Splatcube4v4";
                     player.sendPluginMessage("nebula:main", message);
                 }
             },
             (player) -> {
                 player.setTag(Tags.hubTag, false);
-                player.sendMessage("Leaving queue");
-                MinecraftServer.getCommandManager().execute(player, "queue leave");
+                String message = "leave_queue:" + player.getUsername();
+                player.sendPluginMessage("nebula:main", message);
             }
     );
 
