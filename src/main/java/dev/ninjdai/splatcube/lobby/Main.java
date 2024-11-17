@@ -50,7 +50,9 @@ public class Main {
         // Velocity Setup
         if(System.getenv("PAPER_VELOCITY_SECRET") instanceof String vsecret) {
             VelocityProxy.enable(vsecret);
-            System.out.println("v-secret: " + vsecret);
+        }
+        if(System.getenv("FOO") instanceof String foo) {
+            System.out.println("FOO: " + foo);
         }
 
         // Event Handlers
