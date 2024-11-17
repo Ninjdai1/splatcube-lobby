@@ -2,6 +2,8 @@ package dev.ninjdai.splatcube.lobby;
 
 import dev.ninjdai.splatcube.lobby.blockhandlers.SignHandler;
 import dev.ninjdai.splatcube.lobby.blockhandlers.SkullHandler;
+import net.hollowcube.polar.AnvilPolar;
+import net.hollowcube.polar.PolarWriter;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
@@ -15,12 +17,15 @@ import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.anvil.AnvilLoader;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 public class Main {
     public static InstanceContainer inkopolisPlaza;
     public static InstanceContainer inkopolisSquare;
     public static InstanceContainer splatville;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         MinecraftServer minecraftServer = MinecraftServer.init();
         InstanceManager instanceManager = MinecraftServer.getInstanceManager();
 

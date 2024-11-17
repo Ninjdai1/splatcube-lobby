@@ -23,7 +23,7 @@
         <dependency>
             <groupId>net.minestom</groupId>
             <artifactId>minestom-snapshots</artifactId>
-            <version>dba90a461b</version>
+            <version>bb7acc2e77</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -39,6 +39,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.hollowcube</groupId>
+            <artifactId>polar</artifactId>
+            <version>1.11.4</version>
         </dependency>
     </dependencies>
 
